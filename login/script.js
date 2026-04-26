@@ -1,13 +1,13 @@
-// Neumorphism Login Form JavaScript
-class NeumorphismLoginForm {
+// Retro Future Login Form JavaScript
+class RetroFutureLoginForm {
     constructor() {
         this.form = document.getElementById('loginForm');
         this.emailInput = document.getElementById('email');
         this.passwordInput = document.getElementById('password');
         this.passwordToggle = document.getElementById('passwordToggle');
-        this.submitButton = this.form.querySelector('.login-btn');
+        this.submitButton = this.form.querySelector('.retro-button');
         this.successMessage = document.getElementById('successMessage');
-        this.socialButtons = document.querySelectorAll('.neu-social');
+        this.socialButtons = document.querySelectorAll('.social-retro');
         
         this.init();
     }
@@ -16,7 +16,7 @@ class NeumorphismLoginForm {
         this.bindEvents();
         this.setupPasswordToggle();
         this.setupSocialButtons();
-        this.setupNeumorphicEffects();
+        this.setupRetroEffects();
     }
     
     bindEvents() {
@@ -26,11 +26,9 @@ class NeumorphismLoginForm {
         this.emailInput.addEventListener('input', () => this.clearError('email'));
         this.passwordInput.addEventListener('input', () => this.clearError('password'));
         
-        // Add soft press effects to inputs
-        [this.emailInput, this.passwordInput].forEach(input => {
-            input.addEventListener('focus', (e) => this.addSoftPress(e));
-            input.addEventListener('blur', (e) => this.removeSoftPress(e));
-        });
+        // Add placeholder for label animations
+        this.emailInput.setAttribute('placeholder', ' ');
+        this.passwordInput.setAttribute('placeholder', ' ');
     }
     
     setupPasswordToggle() {
@@ -38,85 +36,102 @@ class NeumorphismLoginForm {
             const type = this.passwordInput.type === 'password' ? 'text' : 'password';
             this.passwordInput.type = type;
             
-            this.passwordToggle.classList.toggle('show-password', type === 'text');
+            this.passwordToggle.classList.toggle('toggle-active', type === 'text');
             
-            // Add soft click animation
-            this.animateSoftPress(this.passwordToggle);
+            // Add retro hologram effect
+            this.triggerHologramEffect(this.passwordToggle);
         });
     }
     
     setupSocialButtons() {
         this.socialButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                this.animateSoftPress(button);
-                
-                // Determine which social platform based on SVG content
-                const svgPath = button.querySelector('svg path').getAttribute('d');
-                let provider = 'Social';
-                if (svgPath.includes('22.56')) provider = 'Google';
-                else if (svgPath.includes('github')) provider = 'GitHub';
-                else if (svgPath.includes('23.953')) provider = 'Twitter';
-                
+                const provider = button.querySelector('span').textContent.trim();
                 this.handleSocialLogin(provider, button);
             });
         });
     }
     
-    setupNeumorphicEffects() {
-        // Add hover effects to all neumorphic elements
-        const neuElements = document.querySelectorAll('.neu-icon, .neu-checkbox, .neu-social');
-        neuElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.transform = 'scale(1.05)';
+    setupRetroEffects() {
+        // Add hologram effects on input interactions
+        [this.emailInput, this.passwordInput].forEach(input => {
+            input.addEventListener('focus', (e) => {
+                this.activateHologram(e.target.closest('.field-chrome'));
+            });
+            
+            input.addEventListener('blur', (e) => {
+                this.deactivateHologram(e.target.closest('.field-chrome'));
+            });
+        });
+        
+        // Add chrome effects to interactive elements
+        this.addChromeEffects();
+        
+        // Start background matrix effects
+        this.startMatrixEffects();
+    }
+    
+    activateHologram(container) {
+        // Add hologram activation effect
+        container.style.transform = 'translateZ(10px)';
+        container.style.boxShadow = '0 0 30px rgba(0, 255, 255, 0.4)';
+    }
+    
+    deactivateHologram(container) {
+        // Remove hologram effects
+        container.style.transform = 'translateZ(0)';
+        container.style.boxShadow = '';
+    }
+    
+    triggerHologramEffect(element) {
+        // Create hologram ripple effect
+        element.style.filter = 'hue-rotate(180deg) brightness(1.3)';
+        element.style.transform = 'scale(1.1)';
+        
+        setTimeout(() => {
+            element.style.filter = '';
+            element.style.transform = 'scale(1)';
+        }, 200);
+    }
+    
+    addChromeEffects() {
+        // Add chrome interaction effects to all buttons
+        const chromeElements = document.querySelectorAll('.retro-button, .social-retro, .retro-checkbox');
+        
+        chromeElements.forEach(element => {
+            element.addEventListener('mousedown', () => {
+                element.style.filter = 'brightness(1.2) contrast(1.1)';
+            });
+            
+            element.addEventListener('mouseup', () => {
+                element.style.filter = '';
             });
             
             element.addEventListener('mouseleave', () => {
-                element.style.transform = 'scale(1)';
+                element.style.filter = '';
             });
         });
-        
-        // Add ambient light effect on mouse move
-        document.addEventListener('mousemove', (e) => {
-            this.updateAmbientLight(e);
-        });
     }
     
-    updateAmbientLight(e) {
-        const card = document.querySelector('.login-card');
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const angleX = (x - centerX) / centerX;
-        const angleY = (y - centerY) / centerY;
-        
-        const shadowX = angleX * 30;
-        const shadowY = angleY * 30;
-        
-        card.style.boxShadow = `
-            ${shadowX}px ${shadowY}px 60px #bec3cf,
-            ${-shadowX}px ${-shadowY}px 60px #ffffff
-        `;
+    startMatrixEffects() {
+        // Add random matrix glitch effects
+        setInterval(() => {
+            if (Math.random() < 0.15) { // 15% chance every interval
+                this.triggerMatrixGlitch();
+            }
+        }, 3000);
     }
     
-    addSoftPress(e) {
-        const inputGroup = e.target.closest('.neu-input');
-        inputGroup.style.transform = 'scale(0.98)';
-    }
-    
-    removeSoftPress(e) {
-        const inputGroup = e.target.closest('.neu-input');
-        inputGroup.style.transform = 'scale(1)';
-    }
-    
-    animateSoftPress(element) {
-        element.style.transform = 'scale(0.95)';
+    triggerMatrixGlitch() {
+        // Create matrix-style glitch effect on the card
+        const card = document.querySelector('.future-card');
+        card.style.filter = 'hue-rotate(90deg) saturate(1.5)';
+        card.style.transform = 'translate(1px, -1px)';
+        
         setTimeout(() => {
-            element.style.transform = 'scale(1)';
-        }, 150);
+            card.style.filter = '';
+            card.style.transform = '';
+        }, 100);
     }
     
     validateEmail() {
@@ -124,12 +139,12 @@ class NeumorphismLoginForm {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
         if (!email) {
-            this.showError('email', 'Email is required');
+            this.showError('email', 'Email Required');
             return false;
         }
         
         if (!emailRegex.test(email)) {
-            this.showError('email', 'Please enter a valid email');
+            this.showError('email', 'Invalid Format');
             return false;
         }
         
@@ -141,12 +156,12 @@ class NeumorphismLoginForm {
         const password = this.passwordInput.value;
         
         if (!password) {
-            this.showError('password', 'Password is required');
+            this.showError('password', 'Access Code Required');
             return false;
         }
         
         if (password.length < 6) {
-            this.showError('password', 'Password must be at least 6 characters');
+            this.showError('password', 'Code Too Short');
             return false;
         }
         
@@ -155,30 +170,43 @@ class NeumorphismLoginForm {
     }
     
     showError(field, message) {
-        const formGroup = document.getElementById(field).closest('.form-group');
+        const retroField = document.getElementById(field).closest('.retro-field');
         const errorElement = document.getElementById(`${field}Error`);
         
-        formGroup.classList.add('error');
+        retroField.classList.add('error');
         errorElement.textContent = message;
         errorElement.classList.add('show');
         
-        // Add gentle shake animation
-        const input = document.getElementById(field);
-        input.style.animation = 'gentleShake 0.5s ease-in-out';
-        setTimeout(() => {
-            input.style.animation = '';
-        }, 500);
+        // Add error glitch effect
+        this.triggerErrorGlitch(retroField);
     }
     
     clearError(field) {
-        const formGroup = document.getElementById(field).closest('.form-group');
+        const retroField = document.getElementById(field).closest('.retro-field');
         const errorElement = document.getElementById(`${field}Error`);
         
-        formGroup.classList.remove('error');
+        retroField.classList.remove('error');
         errorElement.classList.remove('show');
         setTimeout(() => {
             errorElement.textContent = '';
         }, 300);
+    }
+    
+    triggerErrorGlitch(element) {
+        // Error glitch animation
+        element.style.animation = 'none';
+        element.style.transform = 'translateX(3px)';
+        element.style.filter = 'hue-rotate(300deg)';
+        
+        setTimeout(() => {
+            element.style.transform = 'translateX(-3px)';
+        }, 100);
+        
+        setTimeout(() => {
+            element.style.transform = 'translateX(0)';
+            element.style.filter = '';
+            element.style.animation = '';
+        }, 200);
     }
     
     async handleSubmit(e) {
@@ -188,41 +216,66 @@ class NeumorphismLoginForm {
         const isPasswordValid = this.validatePassword();
         
         if (!isEmailValid || !isPasswordValid) {
-            this.animateSoftPress(this.submitButton);
+            // Add system error effect
+            this.triggerSystemError();
             return;
         }
         
         this.setLoading(true);
         
         try {
-            // Simulate soft authentication
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Simulate retro authentication process
+            await new Promise(resolve => setTimeout(resolve, 3500));
             
-            // Show neumorphic success
-            this.showNeumorphicSuccess();
+            // Show portal success
+            this.showPortalSuccess();
         } catch (error) {
-            this.showError('password', 'Login failed. Please try again.');
+            this.showError('password', 'Connection Failed');
         } finally {
             this.setLoading(false);
         }
     }
     
     async handleSocialLogin(provider, button) {
-        console.log(`Initiating ${provider} login...`);
+        console.log(`Connecting to ${provider} via quantum link...`);
         
-        // Add loading state to button
+        // Retro loading state
+        const originalHTML = button.innerHTML;
         button.style.pointerEvents = 'none';
-        button.style.opacity = '0.7';
+        button.style.opacity = '0.8';
+        
+        const loadingHTML = `
+            <div class="social-chrome"></div>
+            <div class="y2k-spinner">
+                <div class="spinner-ring ring-1"></div>
+                <div class="spinner-ring ring-2"></div>
+            </div>
+            <span>LINKING...</span>
+            <div class="social-hologram"></div>
+        `;
+        
+        button.innerHTML = loadingHTML;
+        
+        // Add loading glitch effects
+        const glitchInterval = setInterval(() => {
+            button.style.filter = 'hue-rotate(180deg)';
+            setTimeout(() => {
+                button.style.filter = '';
+            }, 50);
+        }, 300);
         
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log(`Redirecting to ${provider} authentication...`);
+            await new Promise(resolve => setTimeout(resolve, 2800));
+            console.log(`Quantum tunnel established to ${provider}...`);
             // window.location.href = `/auth/${provider.toLowerCase()}`;
         } catch (error) {
-            console.error(`${provider} authentication failed: ${error.message}`);
+            console.error(`${provider} quantum link error:`, error.message);
         } finally {
+            clearInterval(glitchInterval);
             button.style.pointerEvents = 'auto';
             button.style.opacity = '1';
+            button.style.filter = '';
+            button.innerHTML = originalHTML;
         }
     }
     
@@ -230,61 +283,113 @@ class NeumorphismLoginForm {
         this.submitButton.classList.toggle('loading', loading);
         this.submitButton.disabled = loading;
         
-        // Disable social buttons during login
+        // Disable social buttons during loading
         this.socialButtons.forEach(button => {
             button.style.pointerEvents = loading ? 'none' : 'auto';
-            button.style.opacity = loading ? '0.6' : '1';
+            button.style.opacity = loading ? '0.5' : '1';
         });
+        
+        if (loading) {
+            // Add loading matrix effects
+            this.startLoadingMatrix();
+        }
     }
     
-    showNeumorphicSuccess() {
-        // Soft fade out form
-        this.form.style.transform = 'scale(0.95)';
+    startLoadingMatrix() {
+        // Matrix loading effects
+        const matrixInterval = setInterval(() => {
+            if (!this.submitButton.classList.contains('loading')) {
+                clearInterval(matrixInterval);
+                return;
+            }
+            
+            const card = document.querySelector('.future-card');
+            card.style.filter = 'hue-rotate(120deg) brightness(1.1)';
+            setTimeout(() => {
+                card.style.filter = '';
+            }, 100);
+        }, 400);
+    }
+    
+    triggerSystemError() {
+        // System-wide error effect
+        const card = document.querySelector('.future-card');
+        card.style.animation = 'none';
+        card.style.transform = 'translate(2px, -2px)';
+        card.style.filter = 'hue-rotate(300deg) contrast(1.2)';
+        
+        setTimeout(() => {
+            card.style.transform = 'translate(-2px, 2px)';
+        }, 100);
+        
+        setTimeout(() => {
+            card.style.transform = '';
+            card.style.filter = '';
+            card.style.animation = '';
+        }, 200);
+    }
+    
+    showPortalSuccess() {
+        // Hide form with retro transition
+        this.form.style.transform = 'scale(0.9) rotateX(15deg)';
         this.form.style.opacity = '0';
+        this.form.style.filter = 'blur(3px)';
         
         setTimeout(() => {
             this.form.style.display = 'none';
-            document.querySelector('.social-login').style.display = 'none';
-            document.querySelector('.signup-link').style.display = 'none';
+            document.querySelector('.future-social').style.display = 'none';
+            document.querySelector('.future-signup').style.display = 'none';
+            document.querySelector('.retro-divider').style.display = 'none';
             
-            // Show success with soft animation
+            // Show portal success
             this.successMessage.classList.add('show');
             
-            // Animate success icon
-            const successIcon = this.successMessage.querySelector('.neu-icon');
-            successIcon.style.animation = 'successPulse 0.6s ease-out';
+            // Add success portal effects
+            this.triggerPortalEffects();
             
         }, 300);
         
-        // Simulate redirect
+        // Redirect after portal activation
         setTimeout(() => {
-            console.log('Redirecting to dashboard...');
-            // window.location.href = '/dashboard';
-        }, 2500);
+            console.log('Portal activated! Welcome to the future...');
+            // window.location.href = '/future-dashboard';
+        }, 4500);
+    }
+    
+    triggerPortalEffects() {
+        // Portal activation effects
+        const card = document.querySelector('.future-card');
+        
+        // Create portal glow
+        setTimeout(() => {
+            card.style.boxShadow = `
+                0 25px 50px rgba(0, 255, 255, 0.3),
+                0 10px 30px rgba(255, 0, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3)
+            `;
+        }, 1000);
+        
+        // Add success glitch
+        setTimeout(() => {
+            const successTitle = document.querySelector('.success-title');
+            successTitle.style.filter = 'hue-rotate(180deg)';
+            setTimeout(() => {
+                successTitle.style.filter = '';
+            }, 200);
+        }, 2000);
+        
+        // Reset card glow
+        setTimeout(() => {
+            card.style.boxShadow = `
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 10px 30px rgba(255, 0, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2)
+            `;
+        }, 3000);
     }
 }
 
-// Add custom animations
-if (!document.querySelector('#neu-keyframes')) {
-    const style = document.createElement('style');
-    style.id = 'neu-keyframes';
-    style.textContent = `
-        @keyframes gentleShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-        }
-        
-        @keyframes successPulse {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// Initialize the form when DOM is loaded
+// Initialize the retro form when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new NeumorphismLoginForm();
+    new RetroFutureLoginForm();
 });
