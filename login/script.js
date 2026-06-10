@@ -18,7 +18,6 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
             alert('Login gagal! Cek username dan password.');
         }
     })
-    .catch(() => {
-        alert('Gagal konek ke server.');
-    });
+   .catch((err) => {
+    alert('Error: ' + err.message);
 });
